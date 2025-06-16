@@ -1,11 +1,11 @@
 const TelegramBot = require("node-telegram-bot-api");
 require("dotenv").config();
 
-const bot = new TelegramBot(process.env.TOKEN, {
-  webHook: { port: false }
+const bot = new TelegramBot(process.env.token, {
+  webHook: { port: false },
 });
 
-bot.setWebHook(`${process.env.BASE_URL}/api/bot`);
+bot.setWebHook(`${process.env.base_url}/api/bot`);
 
 const blocks = {
   neck: [
@@ -44,16 +44,20 @@ const blocks = {
 
 // === Обработка команд
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, `Привет, ${msg.from.first_name || "друг"}! ✨\nВыбери зону для разминки:`, {
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: "🧠 Шея", callback_data: "neck" }],
-        [{ text: "👁️ Глаза", callback_data: "eyes" }],
-        [{ text: "🧍‍♂️ Спина", callback_data: "back" }],
-        [{ text: "🫁 Дыхание", callback_data: "breathing" }]
-      ]
+  bot.sendMessage(
+    msg.chat.id,
+    `Привет, ${msg.from.first_name || "друг"}! ✨\nВыбери зону для разминки:`,
+    {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "🧠 Шея", callback_data: "neck" }],
+          [{ text: "👁️ Глаза", callback_data: "eyes" }],
+          [{ text: "🧍‍♂️ Спина", callback_data: "back" }],
+          [{ text: "🫁 Дыхание", callback_data: "breathing" }],
+        ],
+      },
     }
-  });
+  );
 });
 
 // === Обработка нажатий кнопок
