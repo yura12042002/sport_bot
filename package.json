@@ -1,9 +1,11 @@
 {
   "name": "bot_for_body",
   "version": "1.0.0",
-  "main": "api/bot.js",
+  "main": "neckBot.js",
   "type": "commonjs",
-  "scripts": {},
+  "scripts": {
+    "start": "node neckBot.js"
+  },
   "dependencies": {
     "dotenv": "^16.5.0",
     "node-telegram-bot-api": "^0.66.0"

@@ -1,11 +1,8 @@
 const TelegramBot = require("node-telegram-bot-api");
 require("dotenv").config();
 
-const bot = new TelegramBot(process.env.token, {
-  webHook: { port: false },
-});
-
-bot.setWebHook(`${process.env.base_url}/api/bot`);
+// === Создаём бота через polling
+const bot = new TelegramBot(process.env.token, { polling: true });
 
 const blocks = {
   neck: [
@@ -42,25 +39,19 @@ const blocks = {
   ],
 };
 
-// === Обработка команд
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(
-    msg.chat.id,
-    `Привет, ${msg.from.first_name || "друг"}! ✨\nВыбери зону для разминки:`,
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "🧠 Шея", callback_data: "neck" }],
-          [{ text: "👁️ Глаза", callback_data: "eyes" }],
-          [{ text: "🧍‍♂️ Спина", callback_data: "back" }],
-          [{ text: "🫁 Дыхание", callback_data: "breathing" }],
-        ],
-      },
+  bot.sendMessage(msg.chat.id, `Привет, ${msg.from.first_name || "друг"}! ✨\nВыбери зону для разминки:`, {
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🧠 Шея", callback_data: "neck" }],
+        [{ text: "👁️ Глаза", callback_data: "eyes" }],
+        [{ text: "🧍‍♂️ Спина", callback_data: "back" }],
+        [{ text: "🫁 Дыхание", callback_data: "breathing" }]
+      ]
     }
-  );
+  });
 });
 
-// === Обработка нажатий кнопок
 bot.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
   const type = query.data;
@@ -77,13 +68,3 @@ bot.on("callback_query", async (query) => {
     await new Promise((res) => setTimeout(res, 2000));
   }
 });
-
-// === Хендлер для Vercel
-module.exports = async (req, res) => {
-  if (req.method === "POST") {
-    bot.processUpdate(req.body);
-    return res.status(200).send("OK");
-  }
-
-  res.status(405).send("Method Not Allowed");
-};
